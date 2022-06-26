@@ -1,9 +1,13 @@
 package com.vdotok.one2one.feature.call.activity
 
+import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.Intent
 import android.media.projection.MediaProjection
+import android.os.Build
 import android.os.Bundle
+import android.util.Rational
+import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import com.vdotok.one2one.R
@@ -12,6 +16,7 @@ import com.vdotok.one2one.databinding.ActivityCallBinding
 import com.vdotok.one2one.models.AcceptCallModel
 import com.vdotok.network.models.UserModel
 import com.vdotok.one2one.utils.ApplicationConstants
+import com.vdotok.streaming.CallClient
 import com.vdotok.streaming.models.CallParams
 
 
@@ -63,7 +68,15 @@ class CallActivity : BaseActivity() {
     override fun multiSessionCreated(sessionIds: Pair<String, String>) {
 
     }
-
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onUserLeaveHint() {
+        enterPipMode()
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun enterPipMode() {
+        val params = PictureInPictureParams.Builder().build();
+        enterPictureInPictureMode(params)
+    }
     companion object {
 
         const val VIDEO_CALL = "video_call"
@@ -90,4 +103,7 @@ class CallActivity : BaseActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+    }
 }
